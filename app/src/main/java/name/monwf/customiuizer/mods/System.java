@@ -1711,7 +1711,8 @@ public class System {
                     List<Integer> n1 = (List<Integer>) XposedHelpers.getObjectField(cs, "neutral1");
                     List<Integer> n2 = (List<Integer>) XposedHelpers.getObjectField(cs, "neutral2");
 
-                    int bgColor = accent1.get(dark ? 5 : 6);
+                    int abgColor = accent1.get(dark ? 5 : 6);
+                    int bgColor = (abgColor & 0x00FFFFFF) | (0xB3 << 24);
                     Object mParams = XposedHelpers.getObjectField(builder, "mParams");
                     XposedHelpers.callMethod(mParams, "reset");
                     XposedHelpers.callMethod(builder, "getColors", mParams);
