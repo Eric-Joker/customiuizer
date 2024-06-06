@@ -36,10 +36,10 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: corretto
-          java-version: '17'
+          java-version: '21'
 
-      - name: Build with Gradle
-        id: build_apk
+      - name: Build sdk
+        id: buildsdk
         run: |
           # gradle properties
           mkdir -p ~/.gradle
@@ -53,7 +53,19 @@ jobs:
           # build
           chmod +x ./gradlew
           ./gradlew build
-          
+      
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: corretto
+          java-version: '17'
+
+      - name: Build app
+        id: buildapp
+        run: |
+          chmod +x ./gradlew
+          ./gradlew build
+      
       - name: Upload release
         if: success()
         uses: actions/upload-artifact@v4
