@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 //def acraVersion = '5.7.0'
-def keystorePropertiesFile = rootProject.file("../keystore.properties")
-def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-def sFile = file(keystoreProperties['storeFile'])
-def sPassword = keystoreProperties['storePassword']
-def kAlias = keystoreProperties['keyAlias']
-def kPassword = keystoreProperties['keyPassword']
+//def keystorePropertiesFile = rootProject.file("../keystore.properties")
+//def keystoreProperties = new Properties()
+//keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+//def sFile = file(keystoreProperties['storeFile'])
+//def sPassword = keystoreProperties['storePassword']
+//def kAlias = keystoreProperties['keyAlias']
+//def kPassword = keystoreProperties['keyPassword']
 def lastVersion = 90
 def lastVersionName = "23.12.30"
 
@@ -18,13 +18,23 @@ if (gradle.startParameter.taskNames.contains(":app:assembleDevelop")) {
 android {
     namespace "name.monwf.customiuizer"
     signingConfigs {
-        v2 {
-            storeFile sFile
-            storePassword sPassword
-            keyAlias kAlias
-            keyPassword kPassword
-            v1SigningEnabled false
-            v2SigningEnabled true
+        create("hasProperties") {
+            if (properties != null) {
+                storeFile = file(getString("storeFile", "STORE_FILE", "Store file"))
+                storePassword = getString("storePassword", "STORE_PASSWORD", "Store password")
+                keyAlias = getString("keyAlias", "KEY_ALIAS", "Key alias")
+                keyPassword = getString("keyPassword", "KEY_PASSWORD", "Key password")
+            }
+            enableV1Signing = true
+            enableV2Signing = true
+            enableV3Signing = true
+            enableV4Signing = true
+        }
+        create("withoutProperties") {
+            enableV1Signing = true
+            enableV2Signing = true
+            enableV3Signing = true
+            enableV4Signing = true
         }
     }
     compileSdk 34
