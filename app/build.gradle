@@ -18,25 +18,28 @@ if (gradle.startParameter.taskNames.contains(":app:assembleDevelop")) {
 android {
     namespace "name.monwf.customiuizer"
     signingConfigs {
-        create("hasProperties") {
-            if (properties != null) {
-                storeFile = file(getString("storeFile", "STORE_FILE", "Store file"))
-                storePassword = getString("storePassword", "STORE_PASSWORD", "Store password")
-                keyAlias = getString("keyAlias", "KEY_ALIAS", "Key alias")
-                keyPassword = getString("keyPassword", "KEY_PASSWORD", "Key password")
-            }
-            enableV1Signing = true
-            enableV2Signing = true
-            enableV3Signing = true
-            enableV4Signing = true
+    hasProperties {
+        if (project.hasProperty('storeFile') &&
+            project.hasProperty('storePassword') &&
+            project.hasProperty('keyAlias') &&
+            project.hasProperty('keyPassword')) {
+            storeFile file(project.property('storeFile'))
+            storePassword project.property('storePassword')
+            keyAlias project.property('keyAlias')
+            keyPassword project.property('keyPassword')
         }
-        create("withoutProperties") {
-            enableV1Signing = true
-            enableV2Signing = true
-            enableV3Signing = true
-            enableV4Signing = true
-        }
+        v1SigningEnabled true
+        v2SigningEnabled true
+        v3SigningEnabled true
+        v4SigningEnabled true
     }
+    withoutProperties {
+        v1SigningEnabled true
+        v2SigningEnabled true
+        v3SigningEnabled true
+        v4SigningEnabled true
+    }
+}
     compileSdk 34
     defaultConfig {
         applicationId "name.monwf.customiuizer"
