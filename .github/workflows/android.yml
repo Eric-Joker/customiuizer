@@ -51,6 +51,7 @@ jobs:
           cd libxposed/api && ./gradlew publishToMavenLocal && cd ../..
           cd libxposed/service && ./gradlew publishToMavenLocal && cd ../..
           # build
+          chmod +x ./gradlew
           ./gradlew build
           
       - name: Upload release
