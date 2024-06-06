@@ -1,22 +1,18 @@
-name: Build CI
+name: Android CI
 
 on:
-  workflow_dispatch:
   push:
-    branches: [ master ]
-    paths-ignore:
-      - '**.md'
-      - '**.txt'
-      - '.github/**'
-      - '!.github/workflows/**'
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   build:
-    name: Build CI
+
     runs-on: ubuntu-latest
-    if: ${{ !startsWith(github.event.head_commit.message, '[skip ci]') }}
 
     steps:
+    
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -40,16 +36,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: corretto
-          java-version: '21'
-
-      - name: Write key
-        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
-        run: |
-          echo "${{ secrets.KEYSTORE }}" | base64 --decode > key.jks
-          echo keystore.store.file=`pwd`/key.jks >> local.properties
-          echo keystore.store.password='${{ secrets.KEYSTORE_PASSWORD }}' >> local.properties
-          echo keystore.key.alias='${{ secrets.KEYSTORE_KEY }}' >> local.properties
-          echo keystore.key.password='${{ secrets.KEYSTORE_KEY_PASSWORD }}' >> local.properties
+          java-version: '17'
 
       - name: Build with Gradle
         id: build_apk
@@ -63,28 +50,12 @@ jobs:
           # build dependencies
           cd libxposed/api && ./gradlew publishToMavenLocal && cd ../..
           cd libxposed/service && ./gradlew publishToMavenLocal && cd ../..
-          # build AppLock
-          ./gradlew :app:assemble
-          echo "debug=$(ls app/build/outputs/apk/debug/*-debug.apk | grep -Po '[^/]*?(?=\.apk)')" >> $GITHUB_OUTPUT
-          echo "release=$(ls app/build/outputs/apk/release/*-release.apk | grep -Po '[^/]*?(?=\.apk)')" >> $GITHUB_OUTPUT
-
-      - name: Upload debug
-        if: success()
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ steps.build_apk.outputs.debug }}
-          path: "app/build/outputs/apk/debug/*-debug.apk"
-
+          # build
+          ./gradlew build
+          
       - name: Upload release
         if: success()
         uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.build_apk.outputs.release }}
           path: "app/build/outputs/apk/release/*-release.apk"
-
-      - name: Upload mappings
-        if: success()
-        uses: actions/upload-artifact@v4
-        with:
-          name: mappings
-          path: "app/build/outputs/mapping/release"
