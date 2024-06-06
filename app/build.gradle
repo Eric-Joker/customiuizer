@@ -39,10 +39,10 @@ android {
         enableV1Signing  true
         enableV4Signing  true
     }
+}
     lintOptions {
         abortOnError false
     }
-}
     compileSdk 34
     defaultConfig {
         applicationId "name.monwf.customiuizer"
