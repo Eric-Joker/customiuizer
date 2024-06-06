@@ -31,8 +31,8 @@ jobs:
           distribution: corretto
           java-version: '17'
 
-      - name: Build
-        id: build
+      - name: Build APK
+        id: build_apk
         run: |
           # gradle properties
           mkdir -p ~/.gradle
@@ -45,7 +45,7 @@ jobs:
           cd libxposed/service && sed -i 's/JavaVersion.VERSION_21/JavaVersion.VERSION_17/g' service/build.gradle.kts  && sed -i 's/JavaVersion.VERSION_21/JavaVersion.VERSION_17/g' interface/build.gradle.kts && ./gradlew publishToMavenLocal && cd ../..
           chmod +x ./gradlew
           ./gradlew build
-          find . -name "*.apk"
+          echo "release=$(ls app/build/outputs/apk/release/*-release*.apk | grep -Po '[^/]*?(?=\.apk)')" >> $GITHUB_OUTPUT
       
       - name: Upload release
         if: success()
