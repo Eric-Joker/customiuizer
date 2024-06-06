@@ -42,7 +42,7 @@ jobs:
           echo 'android.native.buildOutput=verbose' >> ~/.gradle/gradle.properties
           # build dependencies
           #cd libxposed/api && ./gradlew publishToMavenLocal && cd ../..
-          cd libxposed/service && sed -i 's/JavaVersion.VERSION_21/JavaVersion.VERSION_17/g' service/build.gradle.kts && ./gradlew publishToMavenLocal && cd ../..
+          cd libxposed/service && sed -i 's/JavaVersion.VERSION_21/JavaVersion.VERSION_17/g' service/build.gradle.kts  && sed -i 's/JavaVersion.VERSION_21/JavaVersion.VERSION_17/g' interface/build.gradle.kts && ./gradlew publishToMavenLocal && cd ../..
           chmod +x ./gradlew
           ./gradlew build
       
