@@ -27,6 +27,21 @@ allprojects {
     }
 }
 
+android {
+    compileSdkVersion 34
+
+    defaultConfig {
+        minSdkVersion 28
+        targetSdkVersion 34
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
+}
+
+
 tasks.register('clean', Delete) {
     delete rootProject.buildDir
 }
