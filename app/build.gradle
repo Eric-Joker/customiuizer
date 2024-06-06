@@ -28,16 +28,16 @@ android {
             keyAlias project.property('keyAlias')
             keyPassword project.property('keyPassword')
         }
-        v1SigningEnabled true
-        v2SigningEnabled true
-        v3SigningEnabled true
-        v4SigningEnabled true
+        enableV1Signing  true
+        enableV1Signing  true
+        enableV1Signing  true
+        enableV4Signing  true
     }
     withoutProperties {
-        v1SigningEnabled true
-        v2SigningEnabled true
-        v3SigningEnabled true
-        v4SigningEnabled true
+        enableV1Signing  true
+        enableV1Signing  true
+        enableV1Signing  true
+        enableV4Signing  true
     }
 }
     compileSdk 34
