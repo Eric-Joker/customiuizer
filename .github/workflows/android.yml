@@ -18,13 +18,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Checkout libxposed/api
-        uses: actions/checkout@v4
-        with:
-          repository: libxposed/api
-          path: libxposed/api
-          fetch-depth: 0
-
       - name: Checkout libxposed/service
         uses: actions/checkout@v4
         with:
@@ -36,10 +29,10 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: corretto
-          java-version: '21'
+          java-version: '17'
 
-      - name: Build sdk
-        id: buildsdk
+      - name: Build
+        id: build
         run: |
           # gradle properties
           mkdir -p ~/.gradle
@@ -48,18 +41,8 @@ jobs:
           echo 'org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8 -XX:+UseParallelGC' >> ~/.gradle/gradle.properties
           echo 'android.native.buildOutput=verbose' >> ~/.gradle/gradle.properties
           # build dependencies
-          cd libxposed/api && ./gradlew publishToMavenLocal && cd ../..
-          cd libxposed/service && ./gradlew publishToMavenLocal && cd ../..
-      
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: corretto
-          java-version: '17'
-
-      - name: Build app
-        id: buildapp
-        run: |
+          #cd libxposed/api && ./gradlew publishToMavenLocal && cd ../..
+          cd libxposed/service && sed -i 's/JavaVersion.VERSION_21/JavaVersion.VERSION_17/g' service/build.gradle.kts && ./gradlew publishToMavenLocal && cd ../..
           chmod +x ./gradlew
           ./gradlew build
       
