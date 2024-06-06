@@ -50,9 +50,6 @@ jobs:
           # build dependencies
           cd libxposed/api && ./gradlew publishToMavenLocal && cd ../..
           cd libxposed/service && ./gradlew publishToMavenLocal && cd ../..
-          # build
-          chmod +x ./gradlew
-          ./gradlew build
       
       - name: Setup Java
         uses: actions/setup-java@v4
